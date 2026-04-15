@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Water: The Macro Crisis Nobody Is Pricing</title>
+  <meta name="description" content="Water is not an environmental problem. It is a macroeconomic one. An interactive data brief on the economics of water scarcity."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:        #eef2f7;
+      --bg2:       #f6f9fc;
+      --white:     #ffffff;
+      --border:    #d0dcea;
+      --border2:   #b8cce0;
+      --navy:      #0a1428;
+      --navy2:     #1a2e4a;
+      --blue:      #2255aa;
+      --blue2:     #1a3a7a;
+      --blue3:     #e6edf8;
+      --amber:     #c85a20;
+      --amber2:    #f0ede8;
+      --amber3:    #f5ebe0;
+      --green:     #1a6a3a;
+      --green2:    #e6f2eb;
+      --red:       #aa2215;
+      --red2:      #f5e8e6;
+      --text:      #0a1428;
+      --text2:     #3a4a5a;
+      --text3:     #6a7a8a;
+      --text4:     #9aaabb;
+      --mono:      'IBM Plex Mono', monospace;
+      --serif:     'Playfair Display', serif;
+      --body:      'Crimson Pro', serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{font-size:16px;scroll-behavior:smooth;}
+    body{
+      font-family:var(--body);
+      background:var(--bg);
+      color:var(--text2);
+      min-height:100vh;
+    }
+
+    .page{max-width:960px;margin:0 auto;padding:3rem 2rem 6rem;}
+
+    /* ── HEADER ── */
+    .site-header{
+      padding:3rem 0 2.5rem;
+      border-bottom:2px solid var(--navy);
+      margin-bottom:3.5rem;
+    }
+    .header-top{
+      display:flex;align-items:center;
+      justify-content:space-between;
+      gap:16px;flex-wrap:wrap;
+      margin-bottom:1.5rem;
+    }
+    .eyebrow{
+      font-family:var(--mono);
+      font-size:10px;font-weight:700;
+      letter-spacing:.18em;text-transform:uppercase;
+      color:var(--blue);
+      display:flex;align-items:center;gap:8px;
+    }
+    .eyebrow-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--amber);
+    }
+    .header-date{
+      font-family:var(--mono);
+      font-size:10px;color:var(--text4);
+      letter-spacing:.08em;
+    }
+    .site-title{
+      font-family:var(--serif);
+      font-size:clamp(32px,5vw,56px);
+      font-weight:900;
+      color:var(--navy);
+      line-height:1.05;
+      letter-spacing:-.5px;
+      margin-bottom:1rem;
+    }
+    .site-title em{
+      font-style:italic;
+      color:var(--amber);
+    }
+    .site-sub{
+      font-size:17px;
+      color:var(--text2);
+      line-height:1.75;
+      max-width:640px;
+      font-family:var(--body);
+    }
+
+    /* ── SECTIONS ── */
+    .sec-head{
+      display:flex;align-items:baseline;
+      gap:16px;margin-bottom:18px;
+    }
+    .sec-tag{
+      font-family:var(--mono);
+      font-size:10px;font-weight:700;
+      letter-spacing:.16em;text-transform:uppercase;
+      color:var(--blue);flex-shrink:0;
+    }
+    .sec-title{
+      font-family:var(--serif);
+      font-size:22px;font-weight:700;
+      color:var(--navy);margin:0;
+    }
+    .sec-desc{
+      font-size:15px;color:var(--text2);
+      margin:0 0 1.75rem;line-height:1.75;
+      max-width:680px;font-family:var(--body);
+    }
+    .divider{
+      border:none;
+      border-top:1px solid var(--border);
+      margin:4rem 0;
+    }
+
+    /* ── KPI GRID ── */
+    .kpi-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+      margin-bottom:3rem;
+    }
+    .kpi{
+      background:var(--white);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:24px 22px;
+      position:relative;
+      overflow:hidden;
+      opacity:0;transform:translateY(14px);
+      transition:opacity .5s,transform .5s,box-shadow .2s,translate .2s;
+      box-shadow:0 2px 8px rgba(10,20,40,0.06);
+    }
+    .kpi.visible{opacity:1;transform:translateY(0);}
+    .kpi:hover{
+      box-shadow:0 8px 24px rgba(10,20,40,0.1);
+      translate:0 -3px;
+    }
+    .kpi-accent{
+      position:absolute;top:0;left:0;right:0;
+      height:3px;border-radius:8px 8px 0 0;
+    }
+    .kpi-tag{
+      font-family:var(--mono);
+      font-size:9px;font-weight:700;
+      letter-spacing:.12em;text-transform:uppercase;
+      color:var(--text4);margin-bottom:12px;
+    }
+    .kpi-num{
+      font-family:var(--serif);
+      font-size:38px;font-weight:900;
+      line-height:1;margin-bottom:8px;
+    }
+    .kpi-label{
+      font-size:13px;color:var(--text2);
+      line-height:1.55;margin-bottom:10px;
+      font-family:var(--body);
+    }
+    .kpi-source{
+      font-family:var(--mono);
+      font-size:9px;color:var(--text4);
+      letter-spacing:.04em;
+    }
+
+    /* ── COUNTRY TERMINAL ── */
+    .terminal{
+      background:var(--white);
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 4px 16px rgba(10,20,40,0.08);
+      margin-bottom:3rem;
+    }
+    .terminal-header{
+      background:var(--navy);
+      padding:14px 20px;
+      display:flex;align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .terminal-dots{display:flex;gap:6px;}
+    .tdot{width:10px;height:10px;border-radius:50%;}
+    .tdot.r{background:#c84a3a;}
+    .tdot.a{background:#c8a84a;}
+    .tdot.g{background:#4aaa6a;}
+    .terminal-title{
+      font-family:var(--mono);
+      font-size:10px;color:#6a8aaa;
+      letter-spacing:.1em;
+    }
+    .terminal-body{padding:24px;}
+    .country-tabs{
+      display:flex;gap:8px;
+      flex-wrap:wrap;margin-bottom:24px;
+    }
+    .ctab{
+      font-family:var(--mono);
+      font-size:11px;font-weight:700;
+      letter-spacing:.08em;text-transform:uppercase;
+      padding:9px 18px;border-radius:6px;
+      border:1.5px solid var(--border);
+      background:transparent;
+      color:var(--text3);cursor:pointer;
+      transition:all .15s;
+    }
+    .ctab:hover{border-color:var(--blue);color:var(--blue);background:var(--blue3);}
+    .ctab.active{
+      background:var(--navy);color:#fff;
+      border-color:var(--navy);
+    }
+    .country-result{display:none;animation:fadeUp .35s ease;}
+    .country-result.show{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+    .cresult-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;margin-bottom:16px;
+    }
+    .cstat{
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:8px;padding:16px 14px;
+    }
+    .cstat-label{
+      font-family:var(--mono);
+      font-size:9px;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;
+      color:var(--text4);margin-bottom:8px;
+    }
+    .cstat-val{
+      font-family:var(--serif);
+      font-size:22px;font-weight:700;
+      line-height:1;margin-bottom:3px;
+    }
+    .cstat-sub{
+      font-family:var(--mono);
+      font-size:9px;color:var(--text4);
+    }
+    .risk-badge{
+      display:inline-block;
+      font-family:var(--mono);
+      font-size:10px;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;
+      padding:5px 12px;border-radius:4px;
+      margin-bottom:14px;
+    }
+    .risk-critical{background:var(--red2);color:var(--red);}
+    .risk-high{background:var(--amber3);color:var(--amber);}
+    .risk-elevated{background:var(--green2);color:var(--green);}
+
+    .cverdict{
+      background:var(--bg);
+      border:1px solid var(--border);
+      border-left:4px solid var(--blue);
+      border-radius:0 8px 8px 0;
+      padding:16px 20px;
+    }
+    .cverdict-label{
+      font-family:var(--mono);
+      font-size:9px;font-weight:700;
+      letter-spacing:.12em;text-transform:uppercase;
+      color:var(--text4);margin-bottom:8px;
+    }
+    .cverdict-text{
+      font-size:14px;color:var(--text2);
+      line-height:1.8;font-family:var(--body);
+    }
+
+    /* ── CONFLICT LIST ── */
+    .conflict-list{
+      display:flex;flex-direction:column;
+      gap:12px;margin-bottom:3rem;
+    }
+    .conflict-card{
+      background:var(--white);
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 2px 8px rgba(10,20,40,0.05);
+      cursor:pointer;
+      transition:box-shadow .2s,translate .2s;
+    }
+    .conflict-card:hover{
+      box-shadow:0 6px 20px rgba(10,20,40,0.1);
+      translate:0 -2px;
+    }
+    .conflict-card.open{
+      box-shadow:0 6px 20px rgba(10,20,40,0.1);
+      border-color:var(--navy2);
+    }
+    .conflict-head{
+      padding:20px 22px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:16px;align-items:start;
+    }
+    .conflict-parties{
+      font-family:var(--serif);
+      font-size:17px;font-weight:700;
+      color:var(--navy);margin-bottom:4px;
+    }
+    .conflict-water{
+      font-family:var(--mono);
+      font-size:10px;font-weight:700;
+      letter-spacing:.08em;
+      color:var(--blue);margin-bottom:8px;
+    }
+    .conflict-summary{
+      font-size:13px;color:var(--text2);
+      line-height:1.7;font-family:var(--body);
+    }
+    .conflict-right{text-align:right;}
+    .conflict-stake{
+      font-family:var(--serif);
+      font-size:22px;font-weight:700;
+      color:var(--amber);margin-bottom:3px;
+    }
+    .conflict-stake-label{
+      font-family:var(--mono);
+      font-size:9px;color:var(--text4);
+      letter-spacing:.06em;margin-bottom:10px;
+    }
+    .conflict-status{
+      display:inline-block;
+      font-family:var(--mono);
+      font-size:9px;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;
+      padding:4px 10px;border-radius:4px;
+    }
+    .conflict-toggle{
+      font-family:var(--mono);
+      font-size:11px;color:var(--text4);
+      margin-top:10px;display:block;
+      transition:color .2s;
+    }
+    .conflict-card:hover .conflict-toggle{color:var(--blue);}
+    .conflict-card.open .conflict-toggle{color:var(--navy);}
+
+    .conflict-body{
+      max-height:0;overflow:hidden;
+      transition:max-height .45s cubic-bezier(.4,0,.2,1);
+      border-top:0 solid var(--border);
+    }
+    .conflict-card.open .conflict-body{
+      max-height:400px;
+      border-top-width:1px;
+    }
+    .conflict-detail{
+      padding:20px 22px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+      background:var(--bg2);
+    }
+    .cd-val{
+      font-family:var(--serif);
+      font-size:22px;font-weight:700;
+      color:var(--navy);margin-bottom:4px;
+    }
+    .cd-label{
+      font-size:12px;color:var(--text3);
+      line-height:1.5;font-family:var(--body);
+    }
+
+    /* ── INSIGHT ── */
+    .insight{
+      background:var(--navy);
+      border-radius:10px;
+      padding:28px 32px;
+      margin-top:1.5rem;
+    }
+    .insight-label{
+      font-family:var(--mono);
+      font-size:10px;font-weight:700;
+      letter-spacing:.16em;text-transform:uppercase;
+      color:var(--amber);margin-bottom:12px;
+    }
+    .insight p{
+      font-size:16px;color:#c8d8e8;
+      line-height:1.9;margin:0;
+      font-family:var(--body);
+    }
+    .insight strong{color:#fff;font-weight:600;}
+
+    /* ── FOOTNOTES ── */
+    .fn{
+      font-family:var(--mono);
+      font-size:10px;color:var(--text4);
+      margin-top:3rem;border-top:1px solid var(--border);
+      padding-top:14px;line-height:2;letter-spacing:.02em;
+    }
+
+    @media(max-width:640px){
+      .kpi-grid{grid-template-columns:1fr 1fr;}
+      .cresult-grid{grid-template-columns:1fr 1fr;}
+      .conflict-head{grid-template-columns:1fr;}
+      .conflict-detail{grid-template-columns:1fr 1fr;}
+      .country-tabs{gap:6px;}
+      .ctab{font-size:10px;padding:7px 12px;}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-top">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        Economic Intelligence Brief · Water
+      </div>
+      <span class="header-date">April 2026 · BRIEF_H2O_001</span>
+    </div>
+    <h1 class="site-title">Water: The Macro Crisis<br/><em>Nobody Is Pricing</em></h1>
+    <p class="site-sub">Water is not an environmental problem. It is a macroeconomic one. $58 trillion in annual economic value. $70 trillion of global GDP exposed by 2050. A futures market Wall Street quietly opened in 2020. Here is the data.</p>
+  </header>
+
+  <!-- SECTION 01: KPIs -->
+  <div class="sec-head">
+    <span class="sec-tag">01 ·</span>
+    <h2 class="sec-title">The numbers that reframe the story</h2>
+  </div>
+  <p class="sec-desc">These are not environmental statistics. They are macroeconomic ones — sourced from the Bank for International Settlements, the World Bank, the IMF, and the WWF.</p>
+
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi" style="transition-delay:0s">
+      <div class="kpi-accent" style="background:var(--blue);"></div>
+      <div class="kpi-tag">Freshwater economic value</div>
+      <div class="kpi-num" style="color:var(--navy);" data-target="58" data-prefix="$" data-suffix="T">--</div>
+      <div class="kpi-label">Annual economic value of water and freshwater ecosystems — equivalent to 60% of global GDP</div>
+      <div class="kpi-source">WWF, 2023</div>
+    </div>
+    <div class="kpi" style="transition-delay:.1s">
+      <div class="kpi-accent" style="background:var(--amber);"></div>
+      <div class="kpi-tag">GDP at risk · 2050</div>
+      <div class="kpi-num" style="color:var(--amber);" data-target="8" data-prefix="" data-suffix="%">--</div>
+      <div class="kpi-label">Average global GDP loss by 2050 without urgent action. Up to 15% for lower-income countries</div>
+      <div class="kpi-source">Global Commission on Economics of Water, 2024</div>
+    </div>
+    <div class="kpi" style="transition-delay:.2s">
+      <div class="kpi-accent" style="background:var(--amber);"></div>
+      <div class="kpi-tag">Inflation impact</div>
+      <div class="kpi-num" style="color:var(--amber);" data-target="3.5" data-prefix="+" data-suffix="%" data-decimal="true">--</div>
+      <div class="kpi-label">Higher annual consumer price inflation per standard deviation increase in water scarcity</div>
+      <div class="kpi-source">Bank for International Settlements, 2025</div>
+    </div>
+    <div class="kpi" style="transition-delay:.3s">
+      <div class="kpi-accent" style="background:var(--red);"></div>
+      <div class="kpi-tag">Global GDP exposed</div>
+      <div class="kpi-num" style="color:var(--red);" data-target="70" data-prefix="$" data-suffix="T">--</div>
+      <div class="kpi-label">Of global GDP will be exposed to high water stress by 2050, up from $15 trillion in 2010</div>
+      <div class="kpi-source">WRI Aqueduct, 2023</div>
+    </div>
+    <div class="kpi" style="transition-delay:.4s">
+      <div class="kpi-accent" style="background:var(--blue);"></div>
+      <div class="kpi-tag">Annual drought cost</div>
+      <div class="kpi-num" style="color:var(--navy);" data-target="307" data-prefix="$" data-suffix="B">--</div>
+      <div class="kpi-label">Current annual global economic losses from drought. By 2050, three in four people face drought impacts</div>
+      <div class="kpi-source">UNU-INWEH, 2024</div>
+    </div>
+    <div class="kpi" style="transition-delay:.5s">
+      <div class="kpi-accent" style="background:var(--red);"></div>
+      <div class="kpi-tag">Supply-demand gap · 2030</div>
+      <div class="kpi-num" style="color:var(--red);" data-target="40" data-prefix="" data-suffix="%">--</div>
+      <div class="kpi-label">By 2030, global water demand could exceed available supply by 40% — in just four years</div>
+      <div class="kpi-source">United Nations, 2024</div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- SECTION 02: COUNTRY TERMINAL -->
+  <div class="sec-head">
+    <span class="sec-tag">02 ·</span>
+    <h2 class="sec-title">The fastest growing economies — and their water exposure</h2>
+  </div>
+  <p class="sec-desc">The world's fastest-growing major economies are among the most water-stressed. Select a country to load its risk profile.</p>
+
+  <div class="terminal">
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="tdot r"></span>
+        <span class="tdot a"></span>
+        <span class="tdot g"></span>
+      </div>
+      <span class="terminal-title">WATER RISK TERMINAL · SELECT COUNTRY TO LOAD PROFILE</span>
+    </div>
+    <div class="terminal-body">
+      <div class="country-tabs">
+        <button class="ctab" onclick="showCountry('india',this)">India</button>
+        <button class="ctab" onclick="showCountry('china',this)">China</button>
+        <button class="ctab" onclick="showCountry('indonesia',this)">Indonesia</button>
+        <button class="ctab" onclick="showCountry('brazil',this)">Brazil</button>
+        <button class="ctab" onclick="showCountry('nigeria',this)">Nigeria</button>
+      </div>
+      <div id="countryResult">
+        <p style="font-size:13px;color:var(--text4);text-align:center;padding:32px 0;font-family:var(--mono);">// Select a country above to load its risk profile</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- SECTION 03: CONFLICT INDEX -->
+  <div class="sec-head">
+    <span class="sec-tag">03 ·</span>
+    <h2 class="sec-title">The geopolitics of water</h2>
+  </div>
+  <p class="sec-desc">Over 310 transboundary rivers and 592 transboundary aquifers cross national borders. Water is already a source of active geopolitical tension. Click any dispute to expand.</p>
+
+  <div class="conflict-list" id="conflictList"></div>
+
+  <div class="insight">
+    <p class="insight-label">Observer's conclusion</p>
+    <p>The framing of water as an environmental problem has allowed the world to treat it as someone else's concern — a charity issue, a climate statistic, a UN goal perpetually off track. <strong>The data does not support that framing.</strong> When the Bank for International Settlements models water scarcity alongside inflation risk, when hedge funds call it the biggest emerging market on earth, when the IMF projects 8% GDP losses by 2050 — this has crossed from environmental to macroeconomic. The institutions that manage global economic stability are now pricing water risk. The question is whether the rest of the world catches up before the supply-demand gap does.</p>
+  </div>
+
+  <p class="fn">Sources: WWF, The High Cost of Cheap Water (2023) · Global Commission on the Economics of Water, Final Report (October 2024) · Bank for International Settlements, Working Paper No.1314 (2025) · World Resources Institute, Aqueduct Water Risk Atlas (2023) · UNU-INWEH, Economics of Drought (2024) · United Nations Water Facts (2024) · World Bank, High and Dry (2016, reaffirmed 2024) · CME Group, NQH2O Water Futures (2020)<br/>All figures labelled with source year. Dashboard by Daksh · April 2026 · Powered by Claude</p>
+
+</div>
+<script>
+const countries={
+  india:{
+    name:'India',
+    riskTier:'critical',
+    verdict:'India is the world\'s fastest-growing major economy — and one of its most water-stressed. India, Mexico, Egypt and Turkey together account for over half of all GDP exposed to high water stress by 2050. A lack of water to cool thermal power plants between 2017 and 2021 already cost India 8.2 terawatt-hours of energy — enough to power 1.5 million households for five years. Without significant water policy reform, water scarcity threatens to become the single largest constraint on India\'s growth trajectory.',
+    stats:[
+      {label:'GDP Growth 2025',val:'6.6%',color:'var(--green)'},
+      {label:'Water Stress Level',val:'Critical',color:'var(--red)'},
+      {label:'GDP at Risk · 2050',val:'7–12%',color:'var(--amber)'},
+      {label:'Inflation Exposure',val:'+4.2%',color:'var(--amber)'}
+    ]
+  },
+  china:{
+    name:'China',
+    riskTier:'critical',
+    verdict:'China faces a severe north-south water divide. The northern plains — home to much of its industrial and agricultural output — face extreme water stress while the south is relatively water-rich. China built the South-North Water Diversion Project, the largest water infrastructure project in history, specifically to address this. Despite this, GDP losses of 7–12% by 2050 are projected without broader reform. China\'s revision to its water law has contributed to a 20% reduction in agricultural water use — demonstrating that policy can move numbers.',
+    stats:[
+      {label:'GDP Growth 2025',val:'4.6%',color:'var(--green)'},
+      {label:'Water Stress Level',val:'High',color:'var(--amber)'},
+      {label:'GDP at Risk · 2050',val:'7–12%',color:'var(--amber)'},
+      {label:'Inflation Exposure',val:'+3.8%',color:'var(--amber)'}
+    ]
+  },
+  indonesia:{
+    name:'Indonesia',
+    riskTier:'high',
+    verdict:'Indonesia presents a paradox — as an archipelago nation it is surrounded by water, yet freshwater stress is acute on the densely populated islands of Java and Bali. Jakarta has been sinking due to groundwater over-extraction, a key driver behind the decision to relocate the capital to Nusantara on Borneo. Agriculture accounts for 70%+ of water use nationally. As Indonesia sustains 4.9% GDP growth, water infrastructure investment has not kept pace with demand — creating a mounting vulnerability in one of Southeast Asia\'s most important economies.',
+    stats:[
+      {label:'GDP Growth 2025',val:'4.9%',color:'var(--green)'},
+      {label:'Water Stress Level',val:'Medium-High',color:'var(--amber)'},
+      {label:'GDP at Risk · 2050',val:'4–6%',color:'var(--amber)'},
+      {label:'Inflation Exposure',val:'+2.9%',color:'var(--blue)'}
+    ]
+  },
+  brazil:{
+    name:'Brazil',
+    riskTier:'elevated',
+    verdict:'Brazil holds approximately 12% of the world\'s freshwater — the largest share of any nation. Yet water stress is growing in its agricultural heartland and northeastern semi-arid region. More critically, Brazil relies on hydroelectric power for nearly 80% of its electricity. As droughts become more frequent — exacerbated by Amazon deforestation disrupting rainfall patterns — Brazil\'s energy security and agricultural export competitiveness face mounting risk. The hidden vulnerability is green water: the soil moisture that drives rainfall through the Amazon atmospheric river.',
+    stats:[
+      {label:'GDP Growth 2025',val:'3.0%',color:'var(--green)'},
+      {label:'Water Stress Level',val:'Low-Medium',color:'var(--green)'},
+      {label:'GDP at Risk · 2050',val:'2–4%',color:'var(--blue)'},
+      {label:'Inflation Exposure',val:'+2.1%',color:'var(--blue)'}
+    ]
+  },
+  nigeria:{
+    name:'Nigeria',
+    riskTier:'high',
+    verdict:'Nigeria represents Sub-Saharan Africa\'s water story at scale. Water demand across Sub-Saharan Africa is expected to increase by 163% by 2050 — four times the rate of any other region. Nigeria\'s north already faces severe desertification and drought. Lake Chad — shared with Niger, Chad and Cameroon — has shrunk by 90% since the 1960s, displacing millions and fuelling conflict. Nigeria\'s GDP could fall by 6% by 2050 under business-as-usual water policies, eroding gains from one of Africa\'s most dynamic economies.',
+    stats:[
+      {label:'GDP Growth 2025',val:'3.8%',color:'var(--green)'},
+      {label:'Water Stress Level',val:'High',color:'var(--red)'},
+      {label:'GDP at Risk · 2050',val:'6%',color:'var(--amber)'},
+      {label:'Inflation Exposure',val:'+3.5%',color:'var(--amber)'}
+    ]
+  }
+};
+
+function showCountry(key,btn){
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d=countries[key];
+  const riskClass=d.riskTier==='critical'?'risk-critical':d.riskTier==='high'?'risk-high':'risk-elevated';
+  const riskLabel=d.riskTier==='critical'?'Critical Risk':d.riskTier==='high'?'High Risk':'Elevated Risk';
+  document.getElementById('countryResult').innerHTML=`
+    <div class="country-result show">
+      <div class="cresult-grid">
+        ${d.stats.map(s=>`
+          <div class="cstat">
+            <div class="cstat-label">${s.label}</div>
+            <div class="cstat-val" style="color:${s.color};">${s.val}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="margin-bottom:12px;">
+        <span class="risk-badge ${riskClass}">${riskLabel}</span>
+      </div>
+      <div class="cverdict">
+        <div class="cverdict-label">Risk Assessment · ${d.name}</div>
+        <div class="cverdict-text">${d.verdict}</div>
+      </div>
+    </div>
+  `;
+}
+
+const conflicts=[
+  {
+    parties:'Ethiopia vs Egypt vs Sudan',
+    water:'Nile River — Grand Ethiopian Renaissance Dam',
+    stake:'$92B',stakeLabel:'Egyptian agriculture at risk',
+    status:'Active Conflict',statusClass:'risk-critical',
+    summary:'Ethiopia\'s completion of Africa\'s largest hydroelectric dam on the Nile has put Egypt — which depends on the Nile for 97% of its freshwater — in direct conflict with its upstream neighbour. Negotiations have repeatedly failed. Egypt has called the dam an existential threat.',
+    detail:[
+      {val:'97%',label:'Egypt\'s dependence on Nile for all freshwater'},
+      {val:'100M',label:'People downstream dependent on Nile flow'},
+      {val:'$4.8B',label:'Cost of Grand Ethiopian Renaissance Dam'}
+    ]
+  },
+  {
+    parties:'India vs Pakistan',
+    water:'Indus Waters Treaty — under unprecedented strain',
+    stake:'$40B',stakeLabel:'Pakistani agriculture dependent on Indus system',
+    status:'Escalating',statusClass:'risk-critical',
+    summary:'The 1960 Indus Waters Treaty — one of the world\'s most durable water-sharing agreements — is under unprecedented strain. India has filed notices to renegotiate. Pakistan depends on the Indus system for 80% of its agricultural water. The treaty was signed during the Cold War and was never designed for climate-driven flow variability.',
+    detail:[
+      {val:'80%',label:'Pakistan\'s agricultural water from Indus system'},
+      {val:'1960',label:'Year treaty was signed — now under renegotiation'},
+      {val:'300M',label:'People dependent on Indus basin water'}
+    ]
+  },
+  {
+    parties:'United States vs Mexico',
+    water:'Colorado River — 1944 Treaty under revision',
+    stake:'$26B',stakeLabel:'Agricultural GDP at risk across seven US states',
+    status:'Active Negotiation',statusClass:'risk-high',
+    summary:'The Colorado River no longer reliably reaches the sea. Over-allocation — the river was divided when flows were at historic highs — combined with severe drought has pushed Lake Mead and Lake Powell to crisis levels. Seven US states and Mexico are all dependent on a system running at roughly 60% of its historical flow.',
+    detail:[
+      {val:'40M',label:'People dependent on Colorado River water'},
+      {val:'~60%',label:'Approximate current flow vs historical baseline'},
+      {val:'$1.4T',label:'Economic activity supported by Colorado River'}
+    ]
+  },
+  {
+    parties:'China vs Downstream Nations',
+    water:'Mekong River — upstream dam construction',
+    stake:'$35B',stakeLabel:'Downstream fishing and agriculture GDP',
+    status:'Active',statusClass:'risk-high',
+    summary:'China has built 11 major dams on the upper Mekong, giving Beijing unilateral control over flow timing to Vietnam, Cambodia, Laos, Thailand and Myanmar. During the 2019 drought, Chinese dams were found to be holding back water that could have relieved downstream shortages. The Mekong supports the livelihoods of 60 million people.',
+    detail:[
+      {val:'60M',label:'People dependent on Mekong for livelihoods'},
+      {val:'11',label:'Major dams built by China on upper Mekong'},
+      {val:'90%',label:'Of protein from Mekong fisheries in some communities'}
+    ]
+  },
+  {
+    parties:'Lake Chad Basin Nations',
+    water:'Lake Chad — 90% shrinkage since 1960',
+    stake:'$8B',stakeLabel:'Regional agricultural GDP lost annually',
+    status:'Crisis',statusClass:'risk-critical',
+    summary:'Lake Chad — shared by Nigeria, Niger, Chad and Cameroon — has shrunk by 90% since the 1960s due to climate change and over-extraction. It once supported 30 million people. The shrinkage has driven mass displacement and fuelled the rise of Boko Haram — a direct consequence of water loss at geopolitical scale.',
+    detail:[
+      {val:'90%',label:'Shrinkage of Lake Chad since 1960'},
+      {val:'30M',label:'People who once depended on Lake Chad'},
+      {val:'2.4M',label:'People displaced by the Lake Chad crisis'}
+    ]
+  },
+  {
+    parties:'Israel, Jordan & Palestinian Authority',
+    water:'Jordan River and the Mountain Aquifer',
+    stake:'$12B',stakeLabel:'Regional water-dependent GDP at risk',
+    status:'Chronic',statusClass:'risk-high',
+    summary:'The Jordan River now delivers less than 2% of its historical flow to the Dead Sea. The Mountain Aquifer — the primary freshwater source shared between Israel and the Palestinian territories — is one of the most contested elements of any potential resolution to the conflict. Water allocation has been a feature of every peace negotiation since Oslo.',
+    detail:[
+      {val:'2%',label:'Of historical Jordan River flow now reaching Dead Sea'},
+      {val:'80%',label:'Of Palestinian West Bank water from Mountain Aquifer'},
+      {val:'1B+',label:'Annual cubic metres of water at geopolitical dispute'}
+    ]
+  }
+];
+
+function buildConflicts(){
+  const list=document.getElementById('conflictList');
+  conflicts.forEach((c,i)=>{
+    const card=document.createElement('div');
+    card.className='conflict-card';
+    card.innerHTML=`
+      <div class="conflict-head">
+        <div>
+          <div class="conflict-parties">${c.parties}</div>
+          <div class="conflict-water">${c.water}</div>
+          <div class="conflict-summary">${c.summary}</div>
+          <span class="conflict-toggle">// Click to see data breakdown</span>
+        </div>
+        <div class="conflict-right">
+          <div class="conflict-stake">${c.stake}</div>
+          <div class="conflict-stake-label">${c.stakeLabel}</div>
+          <span class="conflict-status ${c.statusClass}">${c.status}</span>
+        </div>
+      </div>
+      <div class="conflict-body">
+        <div class="conflict-detail">
+          ${c.detail.map(d=>`
+            <div>
+              <div class="cd-val">${d.val}</div>
+              <div class="cd-label">${d.label}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    card.onclick=()=>{
+      const isOpen=card.classList.contains('open');
+      document.querySelectorAll('.conflict-card').forEach(c=>c.classList.remove('open'));
+      if(!isOpen)card.classList.add('open');
+    };
+    list.appendChild(card);
+  });
+}
+
+const kpiObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.kpi').forEach((k,i)=>{
+        setTimeout(()=>{
+          k.classList.add('visible');
+          const num=k.querySelector('.kpi-num');if(!num)return;
+          const target=parseFloat(num.dataset.target);
+          const prefix=num.dataset.prefix||'';
+          const suffix=num.dataset.suffix||'';
+          const isDecimal=num.dataset.decimal==='true';
+          const dur=1000;const s=performance.now();
+          function step(now){
+            const p=Math.min((now-s)/dur,1);
+            const ev=1-Math.pow(1-p,3);
+            const val=target*ev;
+            num.textContent=prefix+(isDecimal?val.toFixed(1):Math.round(val))+suffix;
+            if(p<1)requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        },i*120);
+      });
+      kpiObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const kg=document.getElementById('kpiGrid');
+if(kg)kpiObs.observe(kg);
+
+buildConflicts();
+</script>
+</body>
+</html>
